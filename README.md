@@ -1,7 +1,6 @@
 ## Summary
 
-deploying Dockerized services on Mesos frameworks. A few services including Kafka, Zookeeper and
-RabbitMQ have been successfully deployed on such platform.
+A Mesos platform refernce architecture for deploying Dockerized services using Marathon framework is presented in this repo. A few services including Cassndra, Kafka, Zookeeper and RabbitMQ have been successfully deployed on such platform.
 
 Using Marathon and Chronos frameworks, application/service deployment to various environments
 become much simpler comparing with CF based platform. Both containerized and regular applications
