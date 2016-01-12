@@ -1,0 +1,15 @@
+[Unit]
+Description=Mesos DNS
+After=network.target syslog.service
+Wants=syslog.service
+
+[Service]
+Environment=CONFIG=/etc/mesos-dns/config.json
+Environment=LOGDIR=/var/log/mesos
+ExecStart=/usr/local/bin/mesos-dns -v=2 -alsologtostderr --config ${CONFIG} --log_dir ${LOGDIR}
+ExecReload=/bin/kill -USR2 $MAINPID
+KillMode=mixed
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

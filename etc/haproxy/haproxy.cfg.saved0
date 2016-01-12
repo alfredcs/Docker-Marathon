@@ -1,0 +1,310 @@
+global
+  daemon
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  maxconn 4096
+  tune.ssl.default-dh-param 2048
+  chroot /var/run/haproxy
+  stats socket /run/haproxy/admin.sock mode 660 level admin
+  pidfile     /var/run/haproxy.pid
+
+defaults
+  log               global
+  retries           3
+  maxconn           2000
+  timeout connect   5s
+  timeout client    50s
+  timeout server    50s
+
+listen stats
+  bind 127.0.0.1:9090
+  balance
+  mode http
+  stats enable
+  stats auth admin:topP1ssw0rd
+
+userlist UsersFor_Mesos_API
+  group adm users adminUser,admin
+  group ops users adminUser
+  user adminUser password $6$iRwbkqxHH$lsftrLz9fJodH/Qums61xeiYdKItL9TPApR3zcRkOXj94J5PyQ/.kW3lk1Z/SSXhGUTKVLfQVByKfgbZKKbSb.
+  user admin password $6$iRwbkqxHH$lsftrLz9fJodH/Qums61xeiYdKItL9TPApR3zcRkOXj94J5PyQ/.kW3lk1Z/SSXhGUTKVLfQVByKfgbZKKbSb.
+
+frontend marathon_api_https
+  mode tcp
+  bind *:1443 
+  #reqadd X-Forwarded-Proto:\ https
+  option socket-stats
+  tcp-request inspect-delay 5s
+  tcp-request content accept if { req_ssl_hello_type 1 }
+  #use_backend marathon_api if { req_ssl_sni -i crd.ge.com }
+  use_backend marathon_api
+
+backend marathon_api
+  mode tcp
+  balance leastconn
+  # maximum SSL session ID length is 32 bytes.
+  stick-table type binary len 32 size 30k expire 30m
+  acl clienthello req_ssl_hello_type 1
+  acl serverhello rep_ssl_hello_type 2
+  # use tcp content accepts to detects ssl client and server hello.
+  tcp-request inspect-delay 5s
+  tcp-request content accept if clienthello
+  # no timeout on response inspect delay by default.
+  tcp-response content accept if serverhello
+  stick on payload_lv(43,1) if clienthello
+  # Learn on response if server hello.
+  stick store-response payload_lv(43,1) if serverhello
+  option ssl-hello-chk
+  option log-health-checks
+  server marathon_api-1 mesos-m1:8443
+  server marathon-api-2 mesos-m2:8443
+  server marathon-api-3 mesos-m3:8443
+
+frontend chronos_api_https
+  bind *:4401 ssl crt /etc/marathon/ssl/private/mesos.pem
+  reqadd X-Forwarded-Proto:\ https
+  option  contstats
+  use_backend chronos_api
+
+backend chronos_api
+  mode http
+  acl AuthOkay_Mesos http_auth_group(UsersFor_Mesos_API) ops
+  http-request auth realm MyAuthRealm if !AuthOkay_Mesos
+  option  httplog
+  monitor-uri  /scheduler/jobs
+  server chronos-api-1 mesos-m1:4400 check inter 10000 fall 4 rise 3
+  server chronos-api-2 mesos-m2:4400 check inter 10000 fall 4 rise 3
+  server chronos-api-3 mesos-m3:4400 check inter 10000 fall 4 rise 3
+
+frontend mesos_api_https
+  bind *:5550 ssl crt /etc/marathon/ssl/private/mesos.pem
+  reqadd X-Forwarded-Proto:\ https
+  option  contstats
+  use_backend mesos_api
+
+backend mesos_api
+  mode http
+  acl AuthOkay_Mesos http_auth_group(UsersFor_Mesos_API) ops
+  http-request auth realm MyAuthRealm if !AuthOkay_Mesos
+  balance leastconn
+  option  httplog
+  monitor-uri  /static/js/app.js
+  cookie SERVERID insert indirect nocache
+  server mesos-api-1 mesos-m1:5050 check inter 10000 fall 4 rise 3
+  server mesos-api-2 mesos-m2:5050 check inter 10000 fall 4 rise 3
+  server mesos-api-3 mesos-m3:5050 check inter 10000 fall 4 rise 3
+
+#frontend marathon_http_appid_in
+#  bind *:81
+#  mode http
+
+#frontend marathon_https_in
+#  bind *:443 ssl crt /etc/ssl/mesosphere.com.pem
+#  mode http
+
+frontend basic-0_10000
+  bind *:10000
+  mode tcp
+  use_backend basic-0_10000
+
+frontend basic-httpd_18080
+  bind *:18080
+  mode tcp
+  use_backend basic-httpd_18080
+
+frontend cass311_node1_7000
+  bind *:7000
+  mode tcp
+  use_backend cass311_node1_7000
+
+frontend cass311_node1_7001
+  bind *:7001
+  mode tcp
+  use_backend cass311_node1_7001
+
+frontend cass311_node1_7199
+  bind *:7199
+  mode tcp
+  use_backend cass311_node1_7199
+
+frontend cass311_node1_9042
+  bind *:9042
+  mode tcp
+  use_backend cass311_node1_9042
+
+frontend cass311_node1_9160
+  bind *:9160
+  mode tcp
+  use_backend cass311_node1_9160
+
+frontend cass311_node2_7000
+  bind *:7000
+  mode tcp
+  use_backend cass311_node2_7000
+
+frontend cass311_node2_7001
+  bind *:7001
+  mode tcp
+  use_backend cass311_node2_7001
+
+frontend cass311_node2_7199
+  bind *:7199
+  mode tcp
+  use_backend cass311_node2_7199
+
+frontend cass311_node2_9042
+  bind *:9042
+  mode tcp
+  use_backend cass311_node2_9042
+
+frontend cass311_node2_9160
+  bind *:9160
+  mode tcp
+  use_backend cass311_node2_9160
+
+frontend cass311_seed_7000
+  bind *:7000
+  mode tcp
+  use_backend cass311_seed_7000
+
+frontend cass311_seed_7001
+  bind *:7001
+  mode tcp
+  use_backend cass311_seed_7001
+
+frontend cass311_seed_7199
+  bind *:7199
+  mode tcp
+  use_backend cass311_seed_7199
+
+frontend cass311_seed_9042
+  bind *:9042
+  mode tcp
+  use_backend cass311_seed_9042
+
+frontend cass311_seed_9160
+  bind *:9160
+  mode tcp
+  use_backend cass311_seed_9160
+
+frontend docker-clean_10001
+  bind *:10001
+  mode tcp
+  use_backend docker-clean_10001
+
+frontend mysql_10002
+  bind *:10002
+  mode tcp
+  use_backend mysql_10002
+
+backend basic-0_10000
+  balance roundrobin
+  mode tcp
+  server ip-10-0-0-69_31856 10.0.0.69:31856
+  server ip-10-0-10-175_31729 10.0.10.175:31729
+  server ip-10-0-10-231_31661 10.0.10.231:31661
+  server ip-10-0-10-232_31664 10.0.10.232:31664
+  server ip-10-0-10-233_31639 10.0.10.233:31639
+  server ip-10-0-10-234_31101 10.0.10.234:31101
+  server ip-10-0-2-178_31657 10.0.2.178:31657
+
+backend basic-httpd_18080
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-233_31983 10.0.10.233:31983
+
+backend cass311_node1_7000
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-177_31861 10.0.10.177:31861
+
+backend cass311_node1_7001
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-177_31862 10.0.10.177:31862
+
+backend cass311_node1_7199
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-177_31860 10.0.10.177:31860
+
+backend cass311_node1_9042
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-177_31864 10.0.10.177:31864
+
+backend cass311_node1_9160
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-177_31863 10.0.10.177:31863
+
+backend cass311_node2_7000
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-178_31441 10.0.10.178:31441
+
+backend cass311_node2_7001
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-178_31442 10.0.10.178:31442
+
+backend cass311_node2_7199
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-178_31440 10.0.10.178:31440
+
+backend cass311_node2_9042
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-178_31439 10.0.10.178:31439
+
+backend cass311_node2_9160
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-178_31443 10.0.10.178:31443
+
+backend cass311_seed_7000
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-174_31263 10.0.10.174:31263
+
+backend cass311_seed_7001
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-174_31264 10.0.10.174:31264
+
+backend cass311_seed_7199
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-174_31262 10.0.10.174:31262
+
+backend cass311_seed_9042
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-174_31266 10.0.10.174:31266
+
+backend cass311_seed_9160
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-174_31265 10.0.10.174:31265
+
+backend docker-clean_10001
+  balance roundrobin
+  mode tcp
+  server ip-10-0-0-69_31289 10.0.0.69:31289
+  server ip-10-0-10-174_31374 10.0.10.174:31374
+  server ip-10-0-10-175_31353 10.0.10.175:31353
+  server ip-10-0-10-176_31779 10.0.10.176:31779
+  server ip-10-0-10-177_31396 10.0.10.177:31396
+  server ip-10-0-10-178_31285 10.0.10.178:31285
+  server ip-10-0-10-230_31325 10.0.10.230:31325
+  server ip-10-0-10-231_31861 10.0.10.231:31861
+  server ip-10-0-10-232_31457 10.0.10.232:31457
+  server ip-10-0-10-233_31541 10.0.10.233:31541
+  server ip-10-0-10-234_31268 10.0.10.234:31268
+  server ip-10-0-2-178_31721 10.0.2.178:31721
+
+backend mysql_10002
+  balance roundrobin
+  mode tcp
+  server ip-10-0-10-178_31161 10.0.10.178:31161

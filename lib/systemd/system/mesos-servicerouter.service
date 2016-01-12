@@ -1,0 +1,18 @@
+[Unit]
+Description=Mesos Service Router to Update Haproxy
+After=network.target
+Wants=network.target
+
+[Timer]
+OnCalendar=*:0/1
+
+[Service]
+ExecStart=/usr/local/bin/servicerouter.py  --marathon http://adminUser:topP1ssw0rd@localhost:8080 --haproxy-config /etc/haproxy/haproxy.cfg
+Restart=always
+RestartSec=20
+LimitNOFILE=16384
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

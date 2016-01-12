@@ -1,0 +1,15 @@
+{
+  "zk": "zk://mesos-m1:2181,mesos-m2:2181,mesos-m3:2181/mesos",
+  "masters": ["mesos-m1:5050", "mesos-m2:5050", "mesos-m3:5050"],
+  "refreshSeconds": 60,
+  "ttl": 60,
+  "domain": "mesos",
+  "port": 53,
+  "resolvers": ["10.0.0.2"],
+  "timeout": 5, 
+  "httpon": true,
+  "dnson": true,
+  "httpport": 8123,
+  "externalon": true,
+  "email": "root.mesos-dns.mesos"
+}

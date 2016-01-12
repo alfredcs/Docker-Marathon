@@ -1,0 +1,22 @@
+  284  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u,mesos-s6u,mesos-s7u,mesos-s8u -u ubuntu -i ../keys/login.pem exe:"curl -sSL http://10.0.10.237/install_mesos_slave.sh | sudo bash"
+  323  history | grep fab
+  324  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u,mesos-s6u,mesos-s7u,mesos-s8u -u ubuntu -i ../keys/login.pem exe:"cat /tmp/hosts"
+  325  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /tmp
+  327  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem scp:"/etc/resolv.conf,/tmp"
+  328  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /tmp/res*"
+  329  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo mv /tmp/resolv.conf /etc"
+  330  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /etc/res*"
+  331  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/localhost/mesos-m1\nameserver mesos-m2\nameserver mesos-m3' /etc/resolv.conf"
+  332  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /etc/res*"
+  333  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /etc/resolv.conf"
+  334  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/localhost/mesos-m1\\nameserver mesos-m2\\nameserver mesos-m3' /etc/resolv.conf"
+  335  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/localhost/mesos-m1\nameserver mesos-m2\nameserver mesos-m3'/ /etc/resolv.conf"
+  336  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /etc/resolv.conf"
+  337  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/^ameserver/nameserver/g' /etc/resolv.conf"
+  338  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"cat /etc/resolv.conf"
+  339  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/mesos-m1/10.0.0.71/g' /etc/resolv.conf"
+  340  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/mesos-m2/10.0.1.50/g' /etc/resolv.conf"
+  341  fab --hosts=mesos-s1u,mesos-s2u,mesos-s3u,mesos-s4u,mesos-s5u -u ubuntu -i ../keys/login.pem exe:"sudo sed -i 's/mesos-m3/10.0.2.109/g' /etc/resolv.conf"
+  349  history | grep fab
+  356  history | grep fab
+  357  fab --hosts=mesos-s3c,mesos-s4c,mesos-s5c,mesos-s6c,mesos-s7c,mesos-s8c -u centos -i ../keys/login.pem exe:"curl -sSL http://10.0.10.237/install_mesos_slave.sh | sudo bash"

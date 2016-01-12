@@ -1,0 +1,145 @@
+{
+ "__comment": "This version works but haproxy does NOT aggregate service into one group. Instead it treats each task as an indipendent service",
+ "id": "/casscluster",
+  "groups": [
+    {
+      "id": "/casscluster/cass311",
+      "apps": [
+          {
+              "id": "/casscluster/cass311/seed",
+              "constraints": [["os", "LIKE", "ubuntu"],["rack_id", "LIKE", "rack_s1u"],  ["hostname", "UNIQUE"]],
+              "instances": 1,
+              "cpu": 0.5,
+              "mem": 6192,
+	      "ports": [7000, 7001, 7199, 8888, 9042, 9160, 61620, 61621],
+              "container": {
+                  "type": "DOCKER",
+                  "docker": {
+                      "image": "registry.sb.aws.ge.com/cass311:latest",
+		      "privileged": true,
+                      "network": "HOST"
+                  },
+		  "volumes": [
+        		{  
+				"containerPath": "/var/lib/cassandra",
+				"hostPath": "/opt/mesos-slaves/cass3/mesos-s1u/data",
+				"mode": "RW" 
+			},
+                        {  
+                                "containerPath": "/var/log/cassandra", 
+                                "hostPath": "/opt/mesos-slaves/cass3/mesos-s1u/log",
+                                "mode": "RW" 
+                        }
+    		  ]
+              },
+              "env": {
+                        "CASSANDRA_SEEDS": "mesos-m1",
+			"CASSANDRA_START_RPC": "true"
+              },
+	      "backoffSeconds": 1,
+              "backoffFactor": 1.15,
+              "maxLaunchDelaySeconds": 3600,
+              "healthChecks": [
+              ],
+              "upgradeStrategy": {
+                  "minimumHealthCapacity": 0.5,
+                  "maximumOverCapacity": 0.2
+              },
+              "uris": [
+                "file:///etc/docker.tar.gz"
+              ]
+	},
+        {
+              "id": "/casscluster/cass311/node1",
+              "constraints": [["os", "LIKE", "ubuntu"],["rack_id", "LIKE", "rack-1"],["hostname", "UNIQUE"]],
+              "instances": 1,
+	      "dependencies": [ "/casscluster/cass311/seed" ],
+              "cpu": 0.5,
+              "mem": 6192,
+              "ports": [7000, 7001, 7199, 8888, 9042, 9160, 61620, 61621],
+              "container": {
+                  "type": "DOCKER",
+                  "docker": {
+                      "image": "registry.sb.aws.ge.com/cass311:latest",
+                      "privileged": true,
+                      "network": "HOST"
+                  },
+                  "volumes": [
+                        {
+                                "containerPath": "/var/lib/cassandra",
+                                "hostPath": "/opt/mesos-slaves/cass3/mesos-s5u/data",
+                                "mode": "RW"
+                        },
+                        {
+                                "containerPath": "/var/log/cassandra",
+                                "hostPath": "/opt/mesos-slaves/cass3/mesos-s5u/log",
+                                "mode": "RW"
+                        }
+                  ]
+              },
+	      "env": {
+			"CASSANDRA_SEEDS": "mesos-m1",
+                        "CASSANDRA_START_RPC": "true"
+	      },
+              "backoffSeconds": 1,
+              "backoffFactor": 1.15,
+              "maxLaunchDelaySeconds": 3600,
+              "healthChecks": [
+              ],
+              "upgradeStrategy": {
+                  "minimumHealthCapacity": 0.5,
+                  "maximumOverCapacity": 0.2
+              },
+              "uris": [
+                "file:///etc/docker.tar.gz"
+              ]
+        },
+        {
+              "id": "/casscluster/cass311/node2",
+              "constraints": [["os", "LIKE", "ubuntu"],["rack_id", "LIKE", "rack-1"],["hostname", "UNIQUE"]],
+              "instances": 1,
+	      "dependencies": [ "/casscluster/cass311/node1"],
+              "cpu": 0.5,
+              "mem": 6192,
+              "ports": [7000, 7001, 7199, 8888, 9042, 9160, 61620, 61621],
+              "container": {
+                  "type": "DOCKER",
+                  "docker": {
+                      "image": "registry.sb.aws.ge.com/cass311:latest",
+                      "privileged": true,
+                      "network": "HOST"
+                  },
+                  "volumes": [
+                        {
+                                "containerPath": "/var/lib/cassandra",
+                                "hostPath": "/opt/mesos-slaves/cass3/mesos-s4u/data",
+                                "mode": "RW"
+                        },
+                        {
+                                "containerPath": "/var/log/cassandra",
+                                "hostPath": "/opt/mesos-slaves/cass3/mesos-s4u/log",
+                                "mode": "RW"
+                        }
+                  ]
+              },
+              "env": {
+                        "CASSANDRA_SEEDS": "mesos-m1",
+                        "CASSANDRA_START_RPC": "true"
+              },
+              "backoffSeconds": 1,
+              "backoffFactor": 1.15,
+              "maxLaunchDelaySeconds": 3600,
+              "healthChecks": [
+              ],
+              "upgradeStrategy": {
+                  "minimumHealthCapacity": 0.5,
+                  "maximumOverCapacity": 0.2
+              },
+              "uris": [
+                "file:///etc/docker.tar.gz"
+              ]
+        }
+      ]
+   }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "docker-clean",
+  "cpus": 0.1,
+  "mem": 16.0,
+  "constraints": [["hostname", "UNIQUE"]],
+  "instances": 12,
+  "cmd": "while sleep 60; do docker rm -v `docker ps -a -q -f status=exited -f status=created` >> /var/log/docker-clean.log; done"
+}
