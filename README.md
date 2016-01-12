@@ -14,7 +14,7 @@ manual intervention.
 ## Archiitecture
 
 
-![alt tag](https://github.com/alfredcs/Docker-Marathon/mesos-platform.png)
+![alt tag](https://github.com/alfredcs/Docker-Marathon/blob/master/mesos-platform.png)
 
 
 ## Considerations and Benefits:
