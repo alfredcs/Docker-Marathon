@@ -10,7 +10,7 @@ multiple service instances can be easily deployed to the platform with full redu
 manual intervention.
 
 
-## Archiitecture
+## Reference Architecture
 
 
 ![alt tag](https://github.com/alfredcs/Docker-Marathon/blob/master/mesos-platform.png)
