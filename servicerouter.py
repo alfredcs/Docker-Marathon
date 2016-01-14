@@ -253,7 +253,7 @@ class ConfigTemplater(object):
       balance
       mode http
       stats enable
-      stats auth admin:topP1ssw0rd
+      stats auth admin:xxxxxxxx
 
     userlist UsersFor_Mesos_API
       group adm users adminUser,admin
