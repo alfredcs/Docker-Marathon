@@ -29,4 +29,4 @@ Capacity Management: Addition nodes can be dynamically added or removed from the
 Infrastructure Agnostic: The reference architect can be deployed on AWS, Bare Metals and Virtual servers.
 
 
-Please refer to the arcitecture refernece (https://github.com/alfredcs/Docker-Marathon/blob/master/Container%20Platform%20With%20Mesos%20on%20Box%20Notes.pdf) for further details.
+Please refer to the [arcitecture reference] (https://github.com/alfredcs/Docker-Marathon/blob/master/Container%20Platform%20With%20Mesos%20on%20Box%20Notes.pdf) for further details.
