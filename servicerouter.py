@@ -253,7 +253,7 @@ class ConfigTemplater(object):
       balance
       mode http
       stats enable
-      stats auth admin:xxxxxxxx
+      stats auth admin:topP1ssw0rd
 
     userlist UsersFor_Mesos_API
       group adm users adminUser,admin
@@ -579,7 +579,7 @@ class MarathonBackend(object):
 
 class MarathonService(object):
 
-    def __init__(self, appId, servicePort, healthCheck):
+    def __init__(self, appId, servicePort, healthCheck, appNetwork):
         self.appId = appId
         self.servicePort = servicePort
         self.backends = set()
@@ -591,6 +591,7 @@ class MarathonService(object):
         self.groups = frozenset()
         self.mode = 'tcp'
         self.healthCheck = healthCheck
+	self.appNetwork = appNetwork
         if healthCheck:
             if healthCheck['protocol'] == 'HTTP':
                 self.mode = 'http'
@@ -916,7 +917,7 @@ def config(apps, groups):
 				backends += backend_server_options.format(
 				  host=min(appp.backends).host,
                           	  host_ipv4= resolve_ip(min(appp.backends).host),
-                          	  port=appp.servicePort,
+                          	  port=appp.servicePort if ( "host" in app.appNetwork.lower() ) else backendServer.port,
                           	  #serverName=serverName,
                           	  serverName=min(appp.backends).host+'_'+str(appp.servicePort),
                           	  cookieOptions=' check cookie ' +
@@ -1027,9 +1028,13 @@ def get_apps(marathon):
     logger.debug("got apps %s", map(lambda app: app["id"], apps))
 
     marathon_apps = []
+    appNetwork=""
 
     for app in apps:
         appId = app['id']
+	if app['container'] :
+		appNetwork=app['container']['docker']['network']
+	#import pdb;pdb.set_trace()
 
         marathon_app = MarathonApp(marathon, appId, app)
         if 'HAPROXY_GROUP' in marathon_app.app['env']:
@@ -1041,7 +1046,7 @@ def get_apps(marathon):
         for i in xrange(len(service_ports)):
             servicePort = service_ports[i]
             service = MarathonService(
-                        appId, servicePort, get_health_check(app, i))
+                        appId, servicePort, get_health_check(app, i), appNetwork)
 
             # Load environment variable configuration
             # TODO(cmaloney): Move to labels once those are supported
