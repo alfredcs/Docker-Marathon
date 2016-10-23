@@ -15,7 +15,7 @@
               "container": {
                   "type": "DOCKER",
                   "docker": {
-                      "image": "registry.sb.aws.ge.com/cass311:latest",
+                      "image": "registry.sb.aws.aghoo.com/cass311:latest",
 		      "privileged": true,
                       "network": "HOST"
                   },
@@ -60,7 +60,7 @@
               "container": {
                   "type": "DOCKER",
                   "docker": {
-                      "image": "registry.sb.aws.ge.com/cass311:latest",
+                      "image": "registry.sb.aws.aghoo.com/cass311:latest",
                       "privileged": true,
                       "network": "HOST"
                   },
@@ -105,7 +105,7 @@
               "container": {
                   "type": "DOCKER",
                   "docker": {
-                      "image": "registry.sb.aws.ge.com/cass311:latest",
+                      "image": "registry.sb.aws.aghoo.com/cass311:latest",
                       "privileged": true,
                       "network": "HOST"
                   },

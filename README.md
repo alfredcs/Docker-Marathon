@@ -1,6 +1,7 @@
 ## Summary
-
-A Mesos platform refernce architecture for deploying Dockerized services using Marathon framework is presented in this repo. A few services including Cassndra, Kafka, Zookeeper and RabbitMQ have been successfully deployed on such platform.
+While PoC is still underway, we would like to present one of the proposed platform architects for
+deploying Dockerized services on Mesos frameworks. A few services including Kafka, Zookeeper and
+RabbitMQ have been successfully deployed on such platform.
 
 Using Marathon and Chronos frameworks, application/service deployment to various environments
 become much simpler comparing with CF based platform. Both containerized and regular applications
@@ -9,17 +10,9 @@ environment modification. Leveraging service discovery automation and load balan
 multiple service instances can be easily deployed to the platform with full redundancy and without
 manual intervention.
 
-
-## Reference Architecture
-
-
-![alt tag](https://github.com/alfredcs/Docker-Marathon/blob/master/mesos-platform.png)
-
-
-## Considerations and Benefits:
-
+##Considerations and Benefits:
 Stability: The approach should be simple and repeatable. The platform should be stable and
-supportable by engineers from GE.
+supportable by engineers from Aghoo.
 Fault Tolerance: The platform should have no single point of failure on service. All controller
 services are clustered without single point of failure. Failed services will be restarted automatically.
 Services and their dependencies and isolated by containers.
@@ -28,5 +21,11 @@ Agility: Service can be dynamically deployed and migrated to another host. Seaml
 Capacity Management: Addition nodes can be dynamically added or removed from the mesosslave farm.
 Infrastructure Agnostic: The reference architect can be deployed on AWS, Bare Metals and Virtual servers.
 
+## Architecture ( Restricted only with access control)
 
-Please refer to the [arcitecture reference] (https://github.com/alfredcs/Docker-Marathon/blob/master/Container%20Platform%20With%20Mesos%20on%20Box%20Notes.pdf) for further details.
+![alt tag] (https://github.build.aghoo.com/marathonMesos/blob/master/mesos-platform.png)
+
+Please refer to the [design doc](https://github.build.aghoo.com/marathonMesos/blob/master/Container%20Platform%20With%20Mesos%20on%20Box%20Notes.pdf) for further architecture details.
+
+For installation refer to the [installation document](https://devcloud.swcoe.aghoo.com/devspace/display/Mesos+Cluster+Installation+for+Docker+Containers) on aghoo confluence.
+
