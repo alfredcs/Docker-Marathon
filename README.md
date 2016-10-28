@@ -23,7 +23,7 @@ Infrastructure Agnostic: The reference architect can be deployed on AWS, Bare Me
 
 ## Architecture ( Restricted only with access control)
 
-![alt tag] (https://github.build.aghoo.com/marathonMesos/blob/master/mesos-platform.png)
+![alt tag] (https://cloud.githubusercontent.com/assets/3374971/19794011/208f4eda-9c84-11e6-81fc-76e461a10fed.png)
 
 Please refer to the [design doc](https://github.build.aghoo.com/marathonMesos/blob/master/Container%20Platform%20With%20Mesos%20on%20Box%20Notes.pdf) for further architecture details.
 
